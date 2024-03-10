@@ -98,7 +98,7 @@ router.get(
   "/info/:id",
   isUserLogin,
   isOwner,
-  async (req: Request, res: Response) => {
+  async (req: UserRequest, res: Response) => {
     try {
       const questionId = req.params.id;
       const question = await prisma.question.findUnique({
@@ -110,12 +110,15 @@ router.get(
           Answer: {
             select: {
               answer: true,
-              user: {
-                select: {
-                  Gender: true,
-                  DateOfBirth: true,
-                },
-              },
+              user:
+                req.user.package === "premium"
+                  ? {
+                      select: {
+                        Gender: true,
+                        DateOfBirth: true,
+                      },
+                    }
+                  : false,
             },
           },
           createdAt: true,
