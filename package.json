@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@prisma/client": "5.10.2",
-    "cors": "^2.8.5"
+    "cors": "^2.8.5",
+    "zod": "^3.22.4"
   }
 }
