@@ -3,6 +3,8 @@ import { z } from "zod";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import prisma from "../../libs/prisma";
+import isUserLogin from "../../libs/middlewares/isUserLogin";
+import { UserRequest } from "../../libs/types/UserRequest";
 
 const router = Router();
 
@@ -13,6 +15,13 @@ const userRegisterSchema = z.object({
   confirmPassword: z.string().min(6),
   gender: z.string(),
   dateOfBirth: z.string(),
+});
+
+const userEditSchema = z.object({
+  name: z.string().optional(),
+  email: z.string().email().optional(),
+  gender: z.string().optional(),
+  dateOfBirth: z.string().optional(),
 });
 
 const userLoginSchema = z.object({
@@ -105,6 +114,30 @@ router.get("/me", async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     return res.status(401).json({ message: "Unauthorized" });
+  }
+});
+
+router.put("/me", isUserLogin, async (req: UserRequest, res: Response) => {
+  try {
+    const data = userEditSchema.parse(req.body);
+    await prisma.user.update({
+      where: { id: req.user?.id },
+      data: {
+        name: data.name || req.user.name,
+        email: data.email || req.user.email,
+        Gender: data.gender || req.user.gender,
+        DateOfBirth: new Date(data.dateOfBirth || req.user.DateOfBirth),
+      },
+    });
+    return res.status(200).json({ message: "User updated" });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res
+        .status(400)
+        .json({ message: "Invalid data", errors: error.errors });
+    }
+    console.error(error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 });
 
