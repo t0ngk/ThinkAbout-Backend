@@ -1,0 +1,16 @@
+version: '3'
+services:
+  mysql:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: SuperSecretPassword
+      MYSQL_DATABASE: ThinkAbout
+      MYSQL_USER: TAAdmin
+      MYSQL_PASSWORD: TAAdmin12345
+    volumes:
+      - mysql-data:/var/lib/mysql
+    ports:
+      - 3306:3306
+
+volumes:
+  mysql-data:
