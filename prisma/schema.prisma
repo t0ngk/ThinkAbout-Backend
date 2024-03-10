@@ -20,6 +20,7 @@ model User {
   password    String
   Gender      String
   DateOfBirth DateTime
+  package     String     @default("free")
   Question    Question[]
   Answer      Answer[]
 }
@@ -30,7 +31,6 @@ model Question {
   choices   Json
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
-  packege   String   @default("free")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Answer    Answer[]
