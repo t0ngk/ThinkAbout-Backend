@@ -9,7 +9,7 @@
     "dev": "nodemon app.ts"
   },
   "keywords": [],
-  "author": "",
+  "author": "t0ng.k",
   "license": "ISC",
   "devDependencies": {
     "@types/cors": "^2.8.17",
