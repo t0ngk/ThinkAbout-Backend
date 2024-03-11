@@ -76,6 +76,25 @@ router.get("/all", async (_: Request, res: Response) => {
   }
 });
 
+router.get("/me", isUserLogin, async (req: UserRequest, res: Response) => {
+  try {
+    const questions = await prisma.question.findMany({
+      where: { userId: req.user.id },
+      select: {
+        id: true,
+        question: true,
+        choices: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+    return res.status(200).json(questions);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
 router.get("/:id", async (req: Request, res: Response) => {
   try {
     const questionId = req.params.id;
@@ -93,25 +112,6 @@ router.get("/:id", async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Question not found" });
     }
     return res.status(200).json(question);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Internal Server Error" });
-  }
-});
-
-router.get("/me", isUserLogin, async (req: UserRequest, res: Response) => {
-  try {
-    const questions = await prisma.question.findMany({
-      where: { userId: req.user.id },
-      select: {
-        id: true,
-        question: true,
-        choices: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
-    return res.status(200).json(questions);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Internal Server Error" });
