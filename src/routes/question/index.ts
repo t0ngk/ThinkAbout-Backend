@@ -37,7 +37,6 @@ router.post("/create", isUserLogin, async (req: UserRequest, res: Response) => {
 router.get(
   "/isOwner/:id",
   isUserLogin,
-  isOwner,
   async (req: UserRequest, res: Response) => {
     try {
       const questionId = req.params.id;
@@ -48,7 +47,7 @@ router.get(
         return res.status(404).json({ message: "Question not found" });
       }
       if (question.userId !== req.user.id) {
-        return res.status(403).json({ message: false });
+        return res.status(200).json({ message: false });
       }
       return res.status(200).json({ message: true });
     } catch (error) {
