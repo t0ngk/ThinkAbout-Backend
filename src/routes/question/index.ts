@@ -37,6 +37,7 @@ router.post("/create", isUserLogin, async (req: UserRequest, res: Response) => {
 router.get(
   "/isOwner/:id",
   isUserLogin,
+  isOwner,
   async (req: UserRequest, res: Response) => {
     try {
       const questionId = req.params.id;
@@ -56,6 +57,29 @@ router.get(
     }
   }
 );
+
+router.get("/:id", async (req: Request, res: Response) => {
+  try {
+    const questionId = req.params.id;
+    const question = await prisma.question.findUnique({
+      where: { id: parseInt(questionId) },
+      select: {
+        id: true,
+        question: true,
+        choices: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+    if (!question) {
+      return res.status(404).json({ message: "Question not found" });
+    }
+    return res.status(200).json(question);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+});
 
 router.get("/all", async (_: Request, res: Response) => {
   try {
