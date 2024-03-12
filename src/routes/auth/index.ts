@@ -105,6 +105,7 @@ router.get("/me", async (req: Request, res: Response) => {
         email: true,
         DateOfBirth: true,
         Gender: true,
+        package: true,
       },
     });
     if (!user) {
