@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         // Define variables
-        DOCKER_IMAGE       = 'c0m3tz/thinkaboutBackend:latest'
+        DOCKER_IMAGE       = 'c0m3tz/thinkaboutbackend:latest'
         DOCKER_CREDENTIALS = credentials('docker')
         DATABASE_URL       = credentials('DATABASE_URL')
     }
